@@ -7,7 +7,7 @@
  * @LastEditTime: 2019-12-03 15:41:51
  */
 const API_URL = {
-  host: "https://wow-test.97kid.com",
-  r: "https://speech2.97kid.com"
+  host: "http://xxtest.xxx.com",
+  r: "https://xxr.xxx.com"
 };
 module.exports = API_URL;
