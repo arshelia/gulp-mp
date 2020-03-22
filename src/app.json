@@ -1,0 +1,19 @@
+{
+  "pages": [
+    "pages/index/index"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "gulp测试",
+    "navigationStyle": "default",
+    "backgroundColor": "#ffffff",
+    "backgroundTextStyle": "dark",
+    "backgroundColorTop": "#ffffff",
+    "backgroundColorBottom": "#ffffff",
+    "enablePullDownRefresh": false,
+    "onReachBottomDistance": 50
+  },
+  "networkTimeout": {},
+  "debug": false
+}
