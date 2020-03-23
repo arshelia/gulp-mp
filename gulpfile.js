@@ -10,6 +10,7 @@ const plumber = require("gulp-plumber");
 const tap = require("gulp-tap");
 const path = require("path");
 const notify = require("gulp-notify");
+const yargs = require("yargs");
 
 const srcPath = "./src/**";
 const distPath = "./dist/";
@@ -90,8 +91,8 @@ const wxss = () => {
           String(file.contents).replace(
             /@import\s+['|"](.+)['|"];/g,
             ($1, $2) => {
-              console.log("$1", $1);
-              console.log("$2", $2);
+              // console.log("$1", $1);
+              // console.log("$2", $2);
               return DIRECTIMPORT.some(item => {
                 return $2.indexOf(item) > -1;
               })
@@ -124,6 +125,63 @@ const img = () => {
     .pipe(gulp.dest(distPath));
 };
 gulp.task(img);
+
+const newfile = () => {
+  yargs
+    .example("gulp newfile  -p mypage", "创建mypage的page目录")
+    .example("gulp newfile  -c mycomponent", "创建mycomponent的component目录")
+    .example(
+      "gulp newfile  -s srcfile -p mypage",
+      "以srcfile为模版创建mypage的page目录"
+    )
+    .option({
+      s: {
+        alias: "src",
+        describe: "模板",
+        type: "string",
+        default: "template"
+      },
+      p: {
+        alias: "page",
+        describe: "page名称",
+        type: "string"
+      },
+      c: {
+        alias: "component",
+        describe: "component名称",
+        type: "string"
+      }
+    })
+    .fail(msg => {
+      console.error("创建失败");
+      console.log(msg);
+      console.log("help");
+      yargs.parse(["--msg"]);
+    })
+    .help("msg");
+
+  const args = yargs.argv;
+  //console.log("args", args);
+  const source = args.s;
+  const filePaths = {
+    p: "pages",
+    c: "components"
+  };
+
+  let name, type;
+  for (let key in filePaths) {
+    if (args[key]) {
+      name = args[key];
+      type = filePaths[key];
+    }
+  }
+  const defaultPath =
+    source === "template"
+      ? `src/${source}/${type}/*`
+      : `src/${type}/${source}/*`;
+  return gulp.src(defaultPath).pipe(gulp.dest(`src/${type}/${name}/`));
+};
+gulp.task(newfile);
 
 gulp.task("watch", () => {
   const watchSassFiles = [
