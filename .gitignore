@@ -5,6 +5,7 @@ $RECYCLE.BIN/
 dist
 
 # macOS
+.vscode
 .DS_Store
 .fseventsd
 .Spotlight-V100

@@ -1,4 +1,7 @@
+@import './styles/common.scss';
+@import './scss/variables';
 .container{
   width: 100%;
   height: 100vh;
+  color: $myGreen;
 }

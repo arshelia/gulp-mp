@@ -14,7 +14,7 @@ const notify = require("gulp-notify");
 const srcPath = "./src/**";
 const distPath = "./dist/";
 //存放variable和mixin的sass文件在被引用时直接导入，不引入dist目录中
-const DIRECTIMPORT = ["scss", "font"];
+const DIRECTIMPORT = ["/scss/", "/font/"];
 const onError = function(err) {
   notify.onError({
     title: "Gulp",
@@ -85,16 +85,18 @@ const wxss = () => {
     .pipe(
       tap(file => {
         const filePath = path.dirname(file.path);
-        // console.log(filePath);
+        //console.log("filepath", filePath);
         file.contents = new Buffer(
           String(file.contents).replace(
             /@import\s+['|"](.+)['|"];/g,
             ($1, $2) => {
-              // console.log($1, $2);
-              const imPath = path.resolve(filePath + "/" + $2);
+              console.log("$1", $1);
+              console.log("$2", $2);
               return DIRECTIMPORT.some(item => {
-                return imPath.indexOf(item) > -1 ? $1 : `/** ${$1} **/`;
-              });
+                return $2.indexOf(item) > -1;
+              })
+                ? $1
+                : `/** ${$1} **/`;
             }
           )
         );
@@ -103,9 +105,12 @@ const wxss = () => {
     .pipe(sass())
     .pipe(postcss([autoprefixer(["iOS >= 8", "Android >= 4.1"])]))
     .pipe(
-      replace(/(\/\*\*\s{0,})(@.+)(\s{0,}\*\*\/)/g, ($1, $2, $3) =>
-        $3.replace(/\.scss/g, ".wxss")
-      )
+      replace(/(\/\*\*\s{0,})(@.+)(\s{0,}\*\*\/)/g, ($1, $2, $3) => {
+        //console.log("$1", $1);
+        //console.log("$2", $2);
+        //console.log("$3", $3);
+        return $3.replace(/\.scss/g, ".wxss");
+      })
     )
     .pipe(rename({ extname: ".wxss" }))
     .pipe(gulp.dest(distPath));
