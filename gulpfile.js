@@ -126,7 +126,7 @@ const img = () => {
 };
 gulp.task(img);
 
-const newfile = () => {
+const newfile = done => {
   yargs
     .example("gulp newfile  -p mypage", "创建mypage的page目录")
     .example("gulp newfile  -c mycomponent", "创建mycomponent的component目录")
@@ -153,6 +153,7 @@ const newfile = () => {
       }
     })
     .fail(msg => {
+      done();
       console.error("创建失败");
       console.log(msg);
       console.log("help");
@@ -168,12 +169,19 @@ const newfile = () => {
     c: "components"
   };
 
-  let name, type;
+  let name,
+    type,
+    hasParam = false;
   for (let key in filePaths) {
     if (args[key]) {
+      hasParam = true;
       name = args[key];
       type = filePaths[key];
     }
+  }
+  if (!hasParam) {
+    done();
+    yargs.parse(["--msg"]);
   }
   const defaultPath =
     source === "template"
